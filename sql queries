@@ -1,0 +1,185 @@
+#Schema for the sql qeries
+Schema for FS-A1 Batch
+
+CREATE TABLE departments (
+    department_id INT PRIMARY KEY,
+    department_name VARCHAR(50)
+);
+
+CREATE TABLE employees (
+    employee_id INT PRIMARY KEY,
+    employee_name VARCHAR(100),
+    department_id INT,
+    salary DECIMAL(10, 2),
+    hire_date DATE,
+    manager_id INT,  -- Added for self-join example
+    FOREIGN KEY (department_id) REFERENCES departments(department_id),
+    FOREIGN KEY (manager_id) REFERENCES employees(employee_id)
+);
+
+CREATE TABLE projects (
+    project_id INT PRIMARY KEY,
+    project_name VARCHAR(100),
+    employee_id INT,
+    FOREIGN KEY (employee_id) REFERENCES employees(employee_id)
+);
+
+Records for the above schema
+
+INSERT INTO departments (department_id, department_name) VALUES
+(1, 'HR'),
+(2, 'Finance'),
+(3, 'IT'),
+(4, 'Marketing'),
+(5, 'Operations');
+
+INSERT INTO employees (employee_id, employee_name, department_id, salary, hire_date, manager_id) VALUES
+(101, 'Alice Johnson', 1, 55000, '2020-06-15', NULL),
+(102, 'Bob Smith', 2, 60000, '2019-03-25', 101),
+(103, 'Charlie Brown', 3, 75000, '2018-11-10', 101),
+(104, 'David Williams', 2, 50000, '2021-08-05', 102),
+(105, 'Eva Davis', 4, 65000, '2017-07-20', 102),
+(106, 'Frank White', NULL, 48000, '2022-02-14', NULL), -- No department assigned
+(107, 'Grace Hall', 3, 72000, '2016-12-30', 103),
+(108, 'Henry Clark', 1, 53000, '2023-04-10', 103),
+(109, 'Ivy Lewis', 5, 58000, '2015-09-18', NULL),
+(110, 'Jack Miller', 4, 62000, '2020-01-29', 105);
+
+INSERT INTO projects (project_id, project_name, employee_id) VALUES
+(1, 'Website Redesign', 101),
+(2, 'Financial Audit', 102),
+(3, 'Cybersecurity Upgrade', 103),
+(4, 'Marketing Strategy', 105),
+(5, 'Supply Chain Optimization', 109);
+
+
+
+
+
+
+
+
+
+
+
+1>
+/*
+Find each department name and the average salary of its employees.
+
+Write your query below
+
+Test case
+case=1
+output=
+department_name avg_salary                                                      
+HR      54000.000000                                                            
+Finance 55000.000000                                                            
+IT      73500.000000                                                            
+Marketing       63500.000000                                                    
+Operations      58000.000000   
+*/
+use fsa1;
+
+
+USE fsa1;
+
+SELECT 
+    d.department_name,
+    AVG(e.salary) AS avg_salary
+FROM 
+    employees e
+JOIN 
+    departments d ON e.department_id = d.department_id
+GROUP BY 
+    d.department_name;
+
+2>
+/*
+Categorize employees based on salary levels. If salary is greater than 60000, 
+the salary_category is “high salary” else “low salary”.
+
+Write your query below
+
+Test case
+case=1
+output=
+employee_name   salary_category                                                 
+Alice Johnson   Low Salary                                                      
+Bob Smith       Low Salary                                                      
+Charlie Brown   High Salary                                                     
+David Williams  Low Salary                                                      
+Eva Davis       High Salary                                                     
+Frank White     Low Salary                                                      
+Grace Hall      High Salary                                                     
+Henry Clark     Low Salary                                                      
+Ivy Lewis       Low Salary                                                      
+Jack Miller     High Salary    
+*/
+use fsa1;
+
+USE fsa1;
+
+SELECT 
+    employee_name,
+    CASE 
+        WHEN salary > 60000 THEN 'High Salary'
+        ELSE 'Low Salary'
+    END AS salary_category
+FROM 
+    employees;
+
+
+3>/*
+Find employees working in the "IT" department using a subquery in JOIN.
+
+Write your query below
+
+Test case
+case=1
+output=
+employee_name                                                                   
+Charlie Brown                                                                   
+Grace Hall     
+*/
+use fsa1;
+
+
+SELECT e.employee_name
+FROM employees e
+JOIN (
+    SELECT department_id
+    FROM departments
+    WHERE department_name = 'IT'
+) AS it_dept ON e.department_id = it_dept.department_id;
+
+
+4>
+/*
+Find employees earning more than 60,000 along with their departments.
+
+Write your query below
+
+Test case
+case=1
+output=
+employee_name   department_name                                                 
+Charlie Brown   IT                                                              
+Eva Davis       Marketing                                                       
+Grace Hall      IT                                                              
+Jack Miller     Marketing      
+*/
+use fsa1;
+
+USE fsa1;
+
+SELECT 
+    e.employee_name,
+    d.department_name
+FROM 
+    employees e
+JOIN 
+    departments d ON e.department_id = d.department_id
+WHERE 
+    e.salary > 60000;
+
+
