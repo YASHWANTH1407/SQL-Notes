@@ -183,3 +183,133 @@ WHERE
     e.salary > 60000;
 
 
+
+/*
+List all employees and department combinations using CROSS JOIN.
+
+Write your query below
+
+Test case
+case=1
+output=
+employee_name	department_name
+Alice Johnson	Operations
+Alice Johnson	Marketing
+Alice Johnson	IT
+Alice Johnson	Finance
+Alice Johnson	HR
+Bob Smith	Operations
+Bob Smith	Marketing
+Bob Smith	IT
+Bob Smith	Finance
+Bob Smith	HR
+Charlie Brown	Operations
+Charlie Brown	Marketing
+Charlie Brown	IT
+Charlie Brown	Finance
+Charlie Brown	HR
+David Williams	Operations
+David Williams	Marketing
+David Williams	IT
+David Williams	Finance
+David Williams	HR
+Eva Davis	Operations
+Eva Davis	Marketing
+Eva Davis	IT
+Eva Davis	Finance
+Eva Davis	HR
+Frank White	Operations
+Frank White	Marketing
+Frank White	IT
+Frank White	Finance
+Frank White	HR
+Grace Hall	Operations
+Grace Hall	Marketing
+Grace Hall	IT
+Grace Hall	Finance
+Grace Hall	HR
+Henry Clark	Operations
+Henry Clark	Marketing
+Henry Clark	IT
+Henry Clark	Finance
+Henry Clark	HR
+Ivy Lewis	Operations
+Ivy Lewis	Marketing
+Ivy Lewis	IT
+Ivy Lewis	Finance
+Ivy Lewis	HR
+Jack Miller	Operations
+Jack Miller	Marketing
+Jack Miller	IT
+Jack Miller	Finance
+Jack Miller	HR      
+*/
+use fsa1;
+select e.employee_name,d.department_name from employees e
+cross join departments d ;
+
+
+
+/*
+List employees and department names using NATURAL JOIN.
+
+Write your query below
+
+Test case
+case=1
+output=
+employee_name	department_name
+Alice Johnson	HR
+Henry Clark	HR
+Bob Smith	Finance
+David Williams	Finance
+Charlie Brown	IT
+Grace Hall	IT
+Eva Davis	Marketing
+Jack Miller	Marketing
+Ivy Lewis	Operations      
+*/
+use fsa1;
+select e.employee_name,d.department_name from employees e join departments d On d.department_id=e.department_id;
+
+
+/*
+Find employees in the "Finance" department.
+
+Write your query below
+
+Test case
+case=1
+output=
+employee_name                                                                   
+Bob Smith                                                                       
+David Williams      
+*/
+use fsa1;
+select e.employee_name from employees e natural join departments d where(d.department_name="Finance");
+
+
+/*
+Find employees earning above the average salary.
+
+Write your query below
+
+Test case
+case=1
+output=
+employee_name   salary                                                          
+Bob Smith       60000.00                                                        
+Charlie Brown   75000.00                                                        
+Eva Davis       65000.00                                                        
+Grace Hall      72000.00                                                        
+Jack Miller     62000.00     
+*/
+
+use fsa1;
+select employee_name ,salary from employees where salary>(select avg(salary) from employees);
+
+
+
+
+
+
